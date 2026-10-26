@@ -16,7 +16,7 @@ const CreateBlogForm = () => {
 
   const handleSubmitForm = () => {
     if(title,content) {
-        dispatch(addedBlog({id : nanoid() , title , content}));
+        dispatch(addedBlog(title , content));
         setTitle("");
         setContent("");
         navigate("/");
