@@ -18,7 +18,12 @@ const  initialState = [
 const blogSlice = createSlice({
   name: "blogs",
   initialState,
-  reducers: {},
+  reducers: {
+    addedBlog : (state, action) => {
+       state.push(action.payload)
+    }
+  },
 });
 
+export const {addedBlog}= blogSlice.actions;
 export default blogSlice.reducer;
