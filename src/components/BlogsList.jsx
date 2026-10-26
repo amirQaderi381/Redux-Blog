@@ -5,7 +5,7 @@ const BlogsList = () => {
   const blogs = useSelector((state) => state.blogs);
 
   const renderedBlogs = blogs.map((blog) => (
-    <article className="blog-excerpt">
+    <article className="blog-excerpt" key={blog.id}>
       <h3>{blog.title}</h3>
       <p className="blog-content">{blog.content.substring(0, 100)}</p>
       <Link to={`/blogs/${blog.id}`} className="button muted-button" >دیدن کامل پست</Link>
