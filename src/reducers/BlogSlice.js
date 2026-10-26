@@ -45,11 +45,15 @@ const blogSlice = createSlice({
         existingBlog.content = content;
       }
     },
+    deletedBlog : (state , action) => {
+      const {id} = action.payload;
+      state.blogs = state.blogs.filter(blog => blog.id !== id);
+    }
   },
 });
 
 export const selectAllBlogs = state => state.blogs.blogs;
 export const selectBlogById = (state , blogId) => state.blogs.blogs.find(blog => blog.id === blogId);
 
-export const { addedBlog, updatedBlog } = blogSlice.actions;
+export const { addedBlog, updatedBlog , deletedBlog } = blogSlice.actions;
 export default blogSlice.reducer;
