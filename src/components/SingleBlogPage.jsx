@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const SingleBlogPage = () => {
   const { blogId } = useParams();
@@ -21,6 +21,14 @@ const SingleBlogPage = () => {
       <article className="blog">
         <h2>{blog.title}</h2>
         <p className="blog-content">{blog.content}</p>
+        <div>
+          <Link className="button" to={`/blogs/edit-blog/${blog.id}`} >
+            ویرایش پست
+          </Link>
+          <Link className="button" to={"/"} style={{marginRight : '1em'}}>
+            بازگشت به صفحه قبل
+          </Link>
+        </div>
       </article>
     </section>
   );

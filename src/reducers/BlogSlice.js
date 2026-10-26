@@ -35,8 +35,16 @@ const blogSlice = createSlice({
         };
       },
     },
+    updatedBlog: (state, action) => {
+      const { id, title, content } = action.payload;
+      const existingBlog = state.find((blog) => blog.id === id);
+      if (existingBlog) {
+        existingBlog.title = title;
+        existingBlog.content = content;
+      }
+    },
   },
 });
 
-export const { addedBlog } = blogSlice.actions;
+export const { addedBlog, updatedBlog } = blogSlice.actions;
 export default blogSlice.reducer;

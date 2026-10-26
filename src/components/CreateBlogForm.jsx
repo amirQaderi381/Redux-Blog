@@ -30,7 +30,8 @@ const CreateBlogForm = () => {
         <input type="text" id="blogTitle" name="blogTitle" onChange={handleTitleChange} />
         <label htmlFor="blogContent">محتوای اصلی : </label>
         <textarea id="blogContent" name="blogContent" onChange={handleContentChange} />
-        <button type="button" onClick={handleSubmitForm}>خیره پست</button>
+        <button type="button" onClick={handleSubmitForm}>ذخیره پست</button>
+        <button style={{marginRight : '1em'}} onClick={()=> navigate('/')}>انصراف </button>
       </form>
     </section>
   );
