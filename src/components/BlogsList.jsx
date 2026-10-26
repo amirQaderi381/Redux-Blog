@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { selectAllBlogs } from "../reducers/BlogSlice";
 
 const BlogsList = () => {
   const navigate = useNavigate();
-  const blogs = useSelector((state) => state.blogs);
+  const blogs = useSelector((state) => selectAllBlogs(state));
 
   const renderedBlogs = blogs.map((blog) => (
     <article className="blog-excerpt" key={blog.id}>

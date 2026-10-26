@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate, useParams } from "react-router-dom";
-import { updatedBlog } from "../reducers/BlogSlice";
+import { selectBlogById, updatedBlog } from "../reducers/BlogSlice";
 
 const EditBlogForm = () => {
   const {blogId} = useParams();
-  const blog = useSelector(state => state.blogs.find(blog => blog.id === blogId));
+  const blog = useSelector(state => selectBlogById(state , blogId));
 
   const [title, setTitle] = useState(blog.title);
   const [content, setContent] = useState(blog.content);

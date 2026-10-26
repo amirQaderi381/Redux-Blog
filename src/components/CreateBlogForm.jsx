@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addedBlog } from "../reducers/BlogSlice";
-import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 
 const CreateBlogForm = () => {
