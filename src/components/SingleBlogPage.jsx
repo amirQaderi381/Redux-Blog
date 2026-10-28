@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { deletedBlog, selectBlogById } from "../reducers/BlogSlice";
+import ShowTime from "./ShowTime";
+import ShowAuthor from "./ShowAuthor";
 
 const SingleBlogPage = () => {
   const { blogId } = useParams();
@@ -27,6 +29,10 @@ const SingleBlogPage = () => {
     <section>
       <article className="blog">
         <h2>{blog.title}</h2>
+        <div style={{marginTop : "10px" , marginRight : "20px"}}>
+          <ShowTime timestamp={blog.date}/>
+          <ShowAuthor userId={blog.user}/>
+        </div>
         <p className="blog-content">{blog.content}</p>
         <div>
           <Link className="button" to={`/blogs/edit-blog/${blog.id}`}>
@@ -37,7 +43,7 @@ const SingleBlogPage = () => {
             className="muted-button"
             style={{ marginRight: "1em" }}
           >
-            حذف
+             حذف پست
           </button>
         </div>
       </article>
