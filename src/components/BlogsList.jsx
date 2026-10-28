@@ -20,7 +20,7 @@ const BlogsList = () => {
   const renderedBlogs = orderedBlogs.map((blog) => (
     <article className="blog-excerpt" key={blog.id}>
       <h3>{blog.title}</h3>
-      <div style={{ marginTop: "10px" }}>
+      <div style={{ marginTop: "10px" , marginRight : "20px" }}>
         <ShowTime timestamp={blog.date} />
       </div>
       <p className="blog-content">{blog.content.substring(0, 100)}</p>
