@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { selectAllBlogs } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
+import ReactionButtons from "./ReactionButtons";
 
 const BlogsList = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const BlogsList = () => {
         <ShowAuthor userId={blog.user}/>
       </div>
       <p className="blog-content">{blog.content.substring(0, 100)}</p>
+      <ReactionButtons blog={blog}/>
       <Link to={`/blogs/${blog.id}`} className="button muted-button">
         دیدن کامل پست
       </Link>

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { deletedBlog, selectBlogById } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
+import ReactionButtons from "./ReactionButtons";
 
 const SingleBlogPage = () => {
   const { blogId } = useParams();
@@ -34,7 +35,8 @@ const SingleBlogPage = () => {
           <ShowAuthor userId={blog.user}/>
         </div>
         <p className="blog-content">{blog.content}</p>
-        <div>
+         <ReactionButtons blog={blog}/>
+        <div style={{marginTop: "10px"}}>
           <Link className="button" to={`/blogs/edit-blog/${blog.id}`}>
             ویرایش پست
           </Link>

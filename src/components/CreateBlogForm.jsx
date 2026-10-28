@@ -17,6 +17,8 @@ const CreateBlogForm = () => {
   const handleContentChange = e => setContent(e.target.value);
   const handleAuthorChange = e => setUserId(e.target.value);
 
+  //متد  بررسی می‌کند که آیا تمام عناصر آرایه شرط موردنظر را برقرار می‌کنند یا خیر.
+  //اگر همه عناصر شرط را داشته باشند، true برمی‌گرداند.
   const canSave = [title , content , userId].every(Boolean);
 
   const handleSubmitForm = () => {
