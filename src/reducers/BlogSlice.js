@@ -71,7 +71,7 @@ const blogSlice = createSlice({
     addedReaction : (state , action) => {
       const {blogId , reaction} = action.payload;
       const existingBlog = state.blogs.find(blog => blog.id === blogId);
-      existingBlog && existingBlog.reactions[reaction] ++;
+      existingBlog && existingBlog.reactions[reaction]++;
     }
   },
 });

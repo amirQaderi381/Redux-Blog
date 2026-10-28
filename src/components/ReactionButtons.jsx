@@ -14,7 +14,7 @@ const ReactionButtons = ({ blog }) => {
   const dispatch = useDispatch();
 
   const renderReactions = Object.entries(reactionEmoji).map(
-    ([reactionName, reactionEmoji]) => (
+    ([reactionName, reactionEmoji]) => ( // داخل متود map از array Destructuring استفاده میکنه
       <button
         className="reaction-button muted-button"
         key={reactionName}
