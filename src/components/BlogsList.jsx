@@ -1,14 +1,28 @@
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { selectAllBlogs } from "../reducers/BlogSlice";
+import ShowTime from "./ShowTime";
 
 const BlogsList = () => {
   const navigate = useNavigate();
   const blogs = useSelector((state) => selectAllBlogs(state));
 
-  const renderedBlogs = blogs.map((blog) => (
+  /*
+   slice() creates a shallow copy of the array, preserving the original order.
+   sort() sorts the copied array based on the comparison function.
+   localeCompare() compares the date strings to determine their order.
+   b.date.localeCompare(a.date) sorts posts from newest to oldest (descending order).
+  */
+  const orderedBlogs = blogs
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const renderedBlogs = orderedBlogs.map((blog) => (
     <article className="blog-excerpt" key={blog.id}>
       <h3>{blog.title}</h3>
+      <div style={{ marginTop: "10px" }}>
+        <ShowTime timestamp={blog.date} />
+      </div>
       <p className="blog-content">{blog.content.substring(0, 100)}</p>
       <Link to={`/blogs/${blog.id}`} className="button muted-button">
         دیدن کامل پست
