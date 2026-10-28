@@ -28,15 +28,16 @@ const blogSlice = createSlice({
       reducer: (state, action) => {
         state.blogs.push(action.payload);
       },
-      prepare: (title, content) => {
+      prepare: (title, content , userId) => {
         //تابع prepare بهت اجازه می‌ده قبل از رسیدن اطلاعات به reducer، ساختار payload رو آماده و سفارشی کنی.
-        //prepare object paylod (complex action) before sending to reducer
+        //prepare object paylod (complex action) before sending to reducer\
         return {
           payload: {
             id: nanoid(),
             date : new Date().toISOString(),
             title,
             content,
+            user : userId
           },
         };
       },
