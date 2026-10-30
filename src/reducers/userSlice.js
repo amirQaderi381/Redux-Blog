@@ -11,6 +11,8 @@ createAsyncThunk برای مدیریت عملیات غیرهم‌زمان است
 اگر در کامپوننت به رفتار معمول Promise و انتقال خطا به catch نیاز داری، از .unwrap() استفاده کن
 */
 
+//createAsyncThunk عملیات غیرهم‌زمان رو مدیریت می‌کنه؛ extraReducers در createSlice مشخص می‌کنه که state چطور به اکشن‌های حاصل از اون عملیات واکنش نشون بده.
+
 export const fetchUsers = createAsyncThunk("/users/fetchUsers", async () => {
   const response = await getAllUsers();
   return response.data;

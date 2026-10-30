@@ -1,13 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { selectAllBlogs } from "../reducers/BlogSlice";
+import { fetchAllBlogs, selectAllBlogs } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
 import ReactionButtons from "./ReactionButtons";
+import { useEffect } from "react";
 
 const BlogsList = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const blogs = useSelector((state) => selectAllBlogs(state));
+  const blogStatus = useSelector((state) => state.blogs.status);
+
+  useEffect(() => {
+    if (blogStatus === "idle") {
+      dispatch(fetchAllBlogs());
+    }
+  }, [blogStatus, dispatch]);
 
   /*
    slice() creates a shallow copy of the array, preserving the original order.
@@ -22,12 +31,12 @@ const BlogsList = () => {
   const renderedBlogs = orderedBlogs.map((blog) => (
     <article className="blog-excerpt" key={blog.id}>
       <h3>{blog.title}</h3>
-      <div style={{ marginTop: "10px" , marginRight : "20px" }}>
+      <div style={{ marginTop: "10px", marginRight: "20px" }}>
         <ShowTime timestamp={blog.date} />
-        <ShowAuthor userId={blog.user}/>
+        <ShowAuthor userId={blog.user} />
       </div>
       <p className="blog-content">{blog.content.substring(0, 100)}</p>
-      <ReactionButtons blog={blog}/>
+      <ReactionButtons blog={blog} />
       <Link to={`/blogs/${blog.id}`} className="button muted-button">
         دیدن کامل پست
       </Link>

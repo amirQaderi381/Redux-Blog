@@ -12,5 +12,33 @@
             "fullname": "فرهاد خسروی"
         }
     ],
-    "blogs": []
+    "blogs": [{
+            "id": "NN-B-M5ux76RX_YutSPu",
+            "date": "2026-10-28T12:12:50.649Z",
+            "title": "اولین پست",
+            "content": "محتوای اولین پست ما",
+            "user": "oFXDkjC757fc8xT6TN0_O",
+            "reactions": {
+                "thumpup": 0,
+                "hooray": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0
+            }
+        },
+        {
+            "id": "24f7AhqXB1GKKQem9u8Uo",
+            "date": "2026-10-30T12:12:50.649Z",
+            "title": "دومین پست",
+            "content": "محتوای دومین پست ما",
+            "user": "PIgQ-Wg4t_giV6xsuoNdK",
+            "reactions": {
+                "thumpup": 0,
+                "hooray": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0
+            }
+        }
+    ]
 }
