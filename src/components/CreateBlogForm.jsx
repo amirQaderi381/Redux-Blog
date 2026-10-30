@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addedBlog } from "../reducers/BlogSlice";
 import { useNavigate } from "react-router-dom";
+import { selectAllUsers } from "../reducers/userSlice";
 
 const CreateBlogForm = () => {
   const [title, setTitle] = useState("");
@@ -11,7 +12,7 @@ const CreateBlogForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const authors = useSelector(state => state.users);
+  const authors = useSelector(state => selectAllUsers(state));
 
   const handleTitleChange = e => setTitle(e.target.value);
   const handleContentChange = e => setContent(e.target.value);
