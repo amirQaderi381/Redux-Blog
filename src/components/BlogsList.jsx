@@ -7,6 +7,33 @@ import ReactionButtons from "./ReactionButtons";
 import { useEffect } from "react";
 import Spinner from "./Spinner";
 
+const Blogs = ({blogs}) => {
+  /*
+   slice() creates a shallow copy of the array, preserving the original order.
+   sort() sorts the copied array based on the comparison function.
+   localeCompare() compares the date strings to determine their order.
+   b.date.localeCompare(a.date) sorts posts from newest to oldest (descending order).
+  */
+  const orderedBlogs = blogs
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  return orderedBlogs.map((blog) => (
+    <article className="blog-excerpt" key={blog.id}>
+      <h3>{blog.title}</h3>
+      <div style={{ marginTop: "10px", marginRight: "20px" }}>
+        <ShowTime timestamp={blog.date} />
+        <ShowAuthor userId={blog.user} />
+      </div>
+      <p className="blog-content">{blog.content.substring(0, 100)}</p>
+      <ReactionButtons blog={blog} />
+      <Link to={`/blogs/${blog.id}`} className="button muted-button">
+        دیدن کامل پست
+      </Link>
+    </article>
+  ));
+};
+
 const BlogsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,30 +51,8 @@ const BlogsList = () => {
   if (blogStatus === "loading") {
     content = <Spinner text="بارگذاری..." />;
   } else if (blogStatus === "completed") {
-    /*
-   slice() creates a shallow copy of the array, preserving the original order.
-   sort() sorts the copied array based on the comparison function.
-   localeCompare() compares the date strings to determine their order.
-   b.date.localeCompare(a.date) sorts posts from newest to oldest (descending order).
-  */
-    const orderedBlogs = blogs
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
-    content = orderedBlogs.map((blog) => (
-      <article className="blog-excerpt" key={blog.id}>
-        <h3>{blog.title}</h3>
-        <div style={{ marginTop: "10px", marginRight: "20px" }}>
-          <ShowTime timestamp={blog.date} />
-          <ShowAuthor userId={blog.user} />
-        </div>
-        <p className="blog-content">{blog.content.substring(0, 100)}</p>
-        <ReactionButtons blog={blog} />
-        <Link to={`/blogs/${blog.id}`} className="button muted-button">
-          دیدن کامل پست
-        </Link>
-      </article>
-    ));
-  } else if(blogStatus === "failed") {
+    content = <Blogs blogs={blogs}/>
+  } else if (blogStatus === "failed") {
     content = <div>{error}</div>;
   }
 

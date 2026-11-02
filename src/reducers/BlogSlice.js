@@ -1,5 +1,10 @@
-import { createAsyncThunk, createSlice, current, nanoid } from "@reduxjs/toolkit";
-import { createBlog, deleteBlog, getAllBlogs } from "../services";
+import {
+  createAsyncThunk,
+  createSlice,
+  current,
+  nanoid,
+} from "@reduxjs/toolkit";
+import { createBlog, deleteBlog, getAllBlogs, updateBlog } from "../services";
 
 const initialState = {
   blogs: [],
@@ -13,10 +18,13 @@ export const fetchAllBlogs = createAsyncThunk("/blogs/fetchBlogs", async () => {
   return response.data;
 });
 
-export const destroyBlog = createAsyncThunk("/blogs/deleteBlog" , async(blogId) => {
-  await deleteBlog(blogId);
-  return blogId;
-});
+export const destroyBlog = createAsyncThunk(
+  "/blogs/deleteBlog",
+  async (blogId) => {
+    await deleteBlog(blogId);
+    return blogId;
+  },
+);
 
 export const addNewBlog = createAsyncThunk(
   "/blogs/addNewBlog",
@@ -25,6 +33,11 @@ export const addNewBlog = createAsyncThunk(
     return response.data;
   },
 );
+
+export const editBlog = createAsyncThunk("/blogs/updateBlog", async (blog) => {
+  const response = await updateBlog(blog.id, blog);
+  return response.data;
+});
 
 const blogSlice = createSlice({
   name: "blogs",
@@ -62,8 +75,8 @@ const blogSlice = createSlice({
     deletedBlog: (state, action) => {
       const { id } = action.payload;
       //debugging
-      console.log(state);  // ❌ logs the Proxy-wrapped data
-      console.log(current(state)) // ✅ CORRECT: logs a plain JS copy of the current data
+      console.log(state); // ❌ logs the Proxy-wrapped data
+      console.log(current(state)); // ✅ CORRECT: logs a plain JS copy of the current data
       state.blogs = state.blogs.filter((blog) => blog.id !== id);
     },
     addedReaction: (state, action) => {
@@ -88,13 +101,18 @@ const blogSlice = createSlice({
       .addCase(addNewBlog.pending, (state, action) => {
         state.addStatus = "loading";
       })
-      .addCase(addNewBlog.fulfilled , (state,action) => {
+      .addCase(addNewBlog.fulfilled, (state, action) => {
         state.addStatus = "completed";
         state.blogs.push(action.payload);
       })
-      .addCase(destroyBlog.fulfilled , (state,action) => {
-        state.blogs = state.blogs.filter(blog => blog.id !== action.payload);
+      .addCase(destroyBlog.fulfilled, (state, action) => {
+        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
       })
+      .addCase(editBlog.fulfilled , (state , action) => {
+        const {id} = action.payload;
+        const blogIndex = state.blogs.findIndex(blog => blog.id === id);
+        state.blogs[blogIndex] = action.payload;
+      });
   },
 });
 
