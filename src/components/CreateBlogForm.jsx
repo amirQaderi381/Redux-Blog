@@ -25,11 +25,11 @@ const CreateBlogForm = () => {
   const canSave =
     [title, content, userId].every(Boolean) && requestStatus === "idle";
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     if (canSave) {
       try {
         setRequestStatus("pending");
-        dispatch(
+        await dispatch(
           addNewBlog({
             id: nanoid(),
             date: new Date().toISOString(),

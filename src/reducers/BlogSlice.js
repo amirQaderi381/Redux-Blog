@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import { createBlog, getAllBlogs } from "../services";
+import { createAsyncThunk, createSlice, current, nanoid } from "@reduxjs/toolkit";
+import { createBlog, deleteBlog, getAllBlogs } from "../services";
 
 const initialState = {
   blogs: [],
@@ -11,6 +11,11 @@ const initialState = {
 export const fetchAllBlogs = createAsyncThunk("/blogs/fetchBlogs", async () => {
   const response = await getAllBlogs();
   return response.data;
+});
+
+export const destroyBlog = createAsyncThunk("/blogs/deleteBlog" , async(blogId) => {
+  await deleteBlog(blogId);
+  return blogId;
 });
 
 export const addNewBlog = createAsyncThunk(
@@ -56,6 +61,9 @@ const blogSlice = createSlice({
     },
     deletedBlog: (state, action) => {
       const { id } = action.payload;
+      //debugging
+      console.log(state);  // ❌ logs the Proxy-wrapped data
+      console.log(current(state)) // ✅ CORRECT: logs a plain JS copy of the current data
       state.blogs = state.blogs.filter((blog) => blog.id !== id);
     },
     addedReaction: (state, action) => {
@@ -83,6 +91,9 @@ const blogSlice = createSlice({
       .addCase(addNewBlog.fulfilled , (state,action) => {
         state.addStatus = "completed";
         state.blogs.push(action.payload);
+      })
+      .addCase(destroyBlog.fulfilled , (state,action) => {
+        state.blogs = state.blogs.filter(blog => blog.id !== action.payload);
       })
   },
 });
