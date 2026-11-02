@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import { getAllBlogs } from "../services";
+import { createBlog, getAllBlogs } from "../services";
 
 const initialState = {
   blogs: [],
-  status: "idle",
+  fetchStatus: "idle",
+  addStatus: "idle",
   error: null,
 };
 
@@ -11,6 +12,14 @@ export const fetchAllBlogs = createAsyncThunk("/blogs/fetchBlogs", async () => {
   const response = await getAllBlogs();
   return response.data;
 });
+
+export const addNewBlog = createAsyncThunk(
+  "/blogs/addNewBlog",
+  async (newBlog) => {
+    const response = await createBlog(newBlog);
+    return response.data;
+  },
+);
 
 const blogSlice = createSlice({
   name: "blogs",
@@ -58,16 +67,23 @@ const blogSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllBlogs.pending, (state, action) => {
-        state.status = "loading";
+        state.fetchStatus = "loading";
       })
       .addCase(fetchAllBlogs.fulfilled, (state, action) => {
-        state.status = "completed";
+        state.fetchStatus = "completed";
         state.blogs = action.payload;
       })
       .addCase(fetchAllBlogs.rejected, (state, action) => {
-        state.status = "failed";
+        state.fetchStatus = "failed";
         state.error = action.error.message;
-      });
+      })
+      .addCase(addNewBlog.pending, (state, action) => {
+        state.addStatus = "loading";
+      })
+      .addCase(addNewBlog.fulfilled , (state,action) => {
+        state.addStatus = "completed";
+        state.blogs.push(action.payload);
+      })
   },
 });
 

@@ -11,7 +11,7 @@ const BlogsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const blogs = useSelector((state) => selectAllBlogs(state));
-  const blogStatus = useSelector((state) => state.blogs.status);
+  const blogStatus = useSelector((state) => state.blogs.fetchStatus);
   const error = useSelector((state) => state.blogs.error);
 
   useEffect(() => {
