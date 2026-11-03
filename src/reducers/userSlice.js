@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import { getAllUsers } from "../services";
+import { createUser, deleteUser, getAllUsers } from "../services";
 
 /*
 createAsyncThunk برای مدیریت عملیات غیرهم‌زمان استفاده می‌شه.
@@ -18,20 +18,41 @@ export const fetchUsers = createAsyncThunk("/users/fetchUsers", async () => {
   return response.data;
 });
 
+export const addUser = createAsyncThunk(
+  "/users/createUser",
+  async (initialUser) => {
+    const response = await createUser(initialUser);
+    return response.data;
+  },
+);
+
+export const removeUser = createAsyncThunk("/users/deleteUser" , async (userId) => {
+  await deleteUser(userId);
+  return userId;
+})
+
 const usersSlice = createSlice({
   name: "users",
   initialState: [],
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchUsers.fulfilled , (state , action) => {
-        return action.payload;
-        /* with returning new result Immer will replace existing state with whatever we return */
+    builder.
+    addCase(fetchUsers.fulfilled, (state, action) => {
+      return action.payload;
+      /* with returning new result Immer will replace existing state with whatever we return */
     })
+    .addCase(addUser.fulfilled , (state , action) => {
+      state.push(action.payload);
+    })
+    .addCase(removeUser.fulfilled , (state , action) => {
+      return state.filter(user => user.id !== action.payload);
+    })
+    ;
   },
 });
 
-
-export const selectAllUsers = state => state.users;
-export const selectUserById = (state , userId) => state.users.find(user => user.id === userId);
+export const selectAllUsers = (state) => state.users;
+export const selectUserById = (state, userId) =>
+  state.users.find((user) => user.id === userId);
 
 export default usersSlice.reducer;

@@ -10,6 +10,14 @@ export const getUser = userId => {
     return axios.get(`${SERVER_URL}/users/${userId}`);
 }
 
+export const createUser = user => {
+    return axios.post(`${SERVER_URL}/users` , user);
+}
+
+export const deleteUser = userId => {
+    return axios.delete(`${SERVER_URL}/users/${userId}`);
+}
+
 export const getAllBlogs = () => {
     return axios.get(`${SERVER_URL}/blogs`);
 }
