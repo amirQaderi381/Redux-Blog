@@ -1,5 +1,6 @@
 import {
   createAsyncThunk,
+  createSelector,
   createSlice,
   current,
   nanoid,
@@ -119,6 +120,22 @@ const blogSlice = createSlice({
 export const selectAllBlogs = (state) => state.blogs.blogs;
 export const selectBlogById = (state, blogId) =>
   state.blogs.blogs.find((blog) => blog.id === blogId);
+
+/*
+ چک کنیم که آیا داده ای که میخواییم تغییر کرده یا نه اگر تغییری نبود همون مقدار قبلی نمایش داده بشه
+  و در غیر اینصورت داده جدید نمایش بده
+*/
+
+/*
+ما input selector و outpu selector داریم
+که میتونیم یک یا چندین input selector داشته باشیم که توابع هستند
+و هرچیزی هم که توسط توابع input selector برگشت داده میشن توسط output selector به عنوان پارامتر داده میشه
+
+*/
+export const selectUserBlogs = createSelector(
+  [selectAllBlogs , (state , userId) => userId] ,
+  (blogs , userId) => blogs.filter(blog => blog.user === userId)
+);
 
 export const { addedBlog, updatedBlog, deletedBlog, addedReaction } =
   blogSlice.actions;
