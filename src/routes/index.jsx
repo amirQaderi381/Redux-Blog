@@ -5,6 +5,7 @@ import SingleBlogPage from "../components/SingleBlogPage";
 import CreateBlogForm from "../components/CreateBlogForm";
 import EditBlogForm from "../components/EditBlogForm";
 import UsersList from "../components/UsersList";
+import UserPage from "../components/UserPage";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,8 @@ export const router = createBrowserRouter([
       { path: "/blogs/create-blog", element: <CreateBlogForm /> },
       { path: "/blogs/edit-blog/:blogId", element: <EditBlogForm /> },
       { path: "/blogs/:blogId", element: <SingleBlogPage /> },
-      { path : "/users" , element : <UsersList/>}
+      { path : "/users" , element : <UsersList/>},
+      { path : "/users/:userId" , element : <UserPage/>}
     ],
   },
 ]);
