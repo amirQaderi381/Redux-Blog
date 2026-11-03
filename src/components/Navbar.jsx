@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
  return(
     <nav>
@@ -5,6 +7,8 @@ const Navbar = () => {
             <h1>وبلاگ کوچک ریداکسی من</h1>
             <div className="navContent">
                 <div className="navLinks"/>
+                <Link to="/"> بلاگ ها</Link>
+                <Link to="/users"> نویسندگان</Link>
             </div>
         </section>
     </nav>
