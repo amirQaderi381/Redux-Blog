@@ -46,3 +46,41 @@ dispatch(fetchBlogs()); //returns 'blogs/fetchBlogs/pending' action
 //builder.addCase => یک ریدوسر تعریف میکنه که هندل میکنه تنها یک نوع اکشن شناخته شده
 //builder.addMatcher => یک ریدوسر تعریف میکنه که به هر اکشنی جواب میده در صورتی که متچر true باشه
 //builder.addDefault => یک ریدوسر تعریف میکنه که زمانی اجرا میشه که هیچ ریدوسری در جواب به اکشن نباشه
+
+//**************************************** */
+//normalized state
+/*
+{
+    users : {
+        ids : ["user1" , "user2" , "user3"],
+        entities : {
+            "user1" : {id : "user1" , firstName : "amir"},
+            "user2" : {id : "user2" , firstName : "mohammad"},
+            "user3" : {id : "user3" , firstName : "ali"}
+        }
+    }
+}
+
+const userId = "user2";
+const userObject = state.users.entities[userId];
+
+createEntityAdaptor({options})
+{ids: [] , entities : {}}
+*/
+
+/*
+متدهای اصلی:
+متد	کاربرد
+addOne	اضافه کردن یک بلاگ
+addMany	اضافه کردن چند بلاگ
+setOne	جایگزینی یک بلاگ
+setMany	جایگزینی چند بلاگ
+setAll	جایگزینی تمام بلاگ‌ها
+updateOne	ویرایش بخشی از یک بلاگ
+updateMany	ویرایش چند بلاگ
+upsertOne	اضافه کردن یا به‌روزرسانی یک بلاگ
+upsertMany	اضافه کردن یا به‌روزرسانی چند بلاگ
+removeOne	حذف یک بلاگ
+removeMany	حذف چند بلاگ
+removeAll	حذف تمام بلاگ‌ها
+*/

@@ -1,5 +1,6 @@
 import {
   createAsyncThunk,
+  createEntityAdapter,
   createSelector,
   createSlice,
   current,
@@ -7,12 +8,23 @@ import {
 } from "@reduxjs/toolkit";
 import { createBlog, deleteBlog, getAllBlogs, updateBlog } from "../services";
 
-const initialState = {
-  blogs: [],
+const blogAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.date.localeCompare(a.date),
+});
+
+// initialState : {ids : [] , entities : {} ,fetchStatus: "idle", addStatus: "idle", error : null}
+const initialState = blogAdapter.getInitialState({
   fetchStatus: "idle",
   addStatus: "idle",
   error: null,
-};
+});
+
+// const initialState = {
+//   blogs: [],
+//   fetchStatus: "idle",
+//   addStatus: "idle",
+//   error: null,
+// };
 
 export const fetchAllBlogs = createAsyncThunk("/blogs/fetchBlogs", async () => {
   const response = await getAllBlogs();
@@ -82,18 +94,21 @@ const blogSlice = createSlice({
     },
     addedReaction: (state, action) => {
       const { blogId, reaction } = action.payload;
-      const existingBlog = state.blogs.find((blog) => blog.id === blogId);
+     // const existingBlog = state.blogs.find((blog) => blog.id === blogId);
+     const existingBlog = state.entities[blogId];
       existingBlog && existingBlog.reactions[reaction]++;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllBlogs.pending, (state, action) => {
+      .addCase(fetchAllBlogs.pending, (state, _) => {
         state.fetchStatus = "loading";
       })
       .addCase(fetchAllBlogs.fulfilled, (state, action) => {
         state.fetchStatus = "completed";
-        state.blogs = action.payload;
+        //state.blogs = action.payload;
+        //اضافه کردن یا به‌روزرسانی چند بلاگ
+        blogAdapter.upsertMany(state , action.payload);
       })
       .addCase(fetchAllBlogs.rejected, (state, action) => {
         state.fetchStatus = "failed";
@@ -104,22 +119,40 @@ const blogSlice = createSlice({
       })
       .addCase(addNewBlog.fulfilled, (state, action) => {
         state.addStatus = "completed";
-        state.blogs.push(action.payload);
+        //state.blogs.push(action.payload);
+        blogAdapter.addMany(action.payload);
       })
       .addCase(destroyBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
+        blogAdapter.removeOne(state, action.payload);
+        //state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
       })
-      .addCase(editBlog.fulfilled , (state , action) => {
-        const {id} = action.payload;
-        const blogIndex = state.blogs.findIndex(blog => blog.id === id);
-        state.blogs[blogIndex] = action.payload;
+      .addCase(editBlog.fulfilled, (state, action) => {
+        const { id } = action.payload;
+        //state.entities[id] = action.payload; روش اول
+        blogAdapter.updateOne(state , {
+          id,
+          changes : action.payload
+        }); //روش پیشنهادی
+
+        /*
+           نکته: اگر ای پی آی همیشه آبجکت کامل بلاگ را برمی‌گرداند و قصد جایگزینی کامل داری، روش اول هم کاملاً معتبر است.
+           روش دوم : اطلاعات جدید با اطلاعات قبلی Merge می‌شوند و فیلدهای قبلی حفظ می‌شوند.
+        */
+        //const blogIndex = state.blogs.findIndex((blog) => blog.id === id);
+        //state.blogs[blogIndex] = action.payload;
       });
   },
 });
 
-export const selectAllBlogs = (state) => state.blogs.blogs;
-export const selectBlogById = (state, blogId) =>
-  state.blogs.blogs.find((blog) => blog.id === blogId);
+export const {
+  selectAll : selectAllBlogs,
+  selectById : selectBlogById,
+  selectIds : selectBlogIds
+} = blogAdapter.getSelectors(state => state.blogs);
+
+// export const selectAllBlogs = (state) => state.blogs.blogs;
+// export const selectBlogById = (state, blogId) =>
+//   state.blogs.blogs.find((blog) => blog.id === blogId);
 
 /*
  چک کنیم که آیا داده ای که میخواییم تغییر کرده یا نه اگر تغییری نبود همون مقدار قبلی نمایش داده بشه
@@ -133,8 +166,8 @@ export const selectBlogById = (state, blogId) =>
 
 */
 export const selectUserBlogs = createSelector(
-  [selectAllBlogs , (state , userId) => userId] ,
-  (blogs , userId) => blogs.filter(blog => blog.user === userId)
+  [selectAllBlogs, (state, userId) => userId],
+  (blogs, userId) => blogs.filter((blog) => blog.user === userId),
 );
 
 export const { addedBlog, updatedBlog, deletedBlog, addedReaction } =
