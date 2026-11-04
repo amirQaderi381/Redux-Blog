@@ -4,21 +4,11 @@ import { fetchAllBlogs, selectAllBlogs } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
 import ReactionButtons from "./ReactionButtons";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import Spinner from "./Spinner";
 
-const Blogs = ({blogs}) => {
-  /*
-   slice() creates a shallow copy of the array, preserving the original order.
-   sort() sorts the copied array based on the comparison function.
-   localeCompare() compares the date strings to determine their order.
-   b.date.localeCompare(a.date) sorts posts from newest to oldest (descending order).
-  */
-  const orderedBlogs = blogs
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date));
-
-  return orderedBlogs.map((blog) => (
+const Blog = memo(({ blog }) => {
+  return (
     <article className="blog-excerpt" key={blog.id}>
       <h3>{blog.title}</h3>
       <div style={{ marginTop: "10px", marginRight: "20px" }}>
@@ -31,8 +21,8 @@ const Blogs = ({blogs}) => {
         دیدن کامل پست
       </Link>
     </article>
-  ));
-};
+  );
+});
 
 const BlogsList = () => {
   const dispatch = useDispatch();
@@ -51,7 +41,17 @@ const BlogsList = () => {
   if (blogStatus === "loading") {
     content = <Spinner text="بارگذاری..." />;
   } else if (blogStatus === "completed") {
-    content = <Blogs blogs={blogs}/>
+    /*
+   slice() creates a shallow copy of the array, preserving the original order.
+   sort() sorts the copied array based on the comparison function.
+   localeCompare() compares the date strings to determine their order.
+   b.date.localeCompare(a.date) sorts posts from newest to oldest (descending order).
+  */
+    const orderedBlogs = blogs
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    content = orderedBlogs.map((blog) => <Blog key={blog.id} blog={blog} />);
   } else if (blogStatus === "failed") {
     content = <div>{error}</div>;
   }
