@@ -120,12 +120,13 @@ const blogSlice = createSlice({
       .addCase(addNewBlog.fulfilled, (state, action) => {
         state.addStatus = "completed";
         //state.blogs.push(action.payload);
-        blogAdapter.addMany(action.payload);
+        blogAdapter.addOne(state , action.payload);
       })
-      .addCase(destroyBlog.fulfilled, (state, action) => {
-        blogAdapter.removeOne(state, action.payload);
-        //state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
-      })
+       .addCase(destroyBlog.fulfilled, blogAdapter.removeOne)
+      // .addCase(destroyBlog.fulfilled, (state, action) => {
+      //   blogAdapter.removeOne(state, action.payload);
+      //   //state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
+      // })
       .addCase(editBlog.fulfilled, (state, action) => {
         const { id } = action.payload;
         //state.entities[id] = action.payload; روش اول

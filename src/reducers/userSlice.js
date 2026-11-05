@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice, nanoid } from "@reduxjs/toolkit";
 import { createUser, deleteUser, getAllUsers } from "../services";
 
 /*
@@ -29,30 +29,35 @@ export const addUser = createAsyncThunk(
 export const removeUser = createAsyncThunk("/users/deleteUser" , async (userId) => {
   await deleteUser(userId);
   return userId;
-})
+});
+
+const userAdapter = createEntityAdapter();
+const initialState = userAdapter.getInitialState();
 
 const usersSlice = createSlice({
   name: "users",
-  initialState: [],
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.
-    addCase(fetchUsers.fulfilled, (state, action) => {
-      return action.payload;
-      /* with returning new result Immer will replace existing state with whatever we return */
-    })
-    .addCase(addUser.fulfilled , (state , action) => {
-      state.push(action.payload);
-    })
-    .addCase(removeUser.fulfilled , (state , action) => {
-      return state.filter(user => user.id !== action.payload);
-    })
+     addCase(fetchUsers.fulfilled, userAdapter.setAll)
+    // addCase(fetchUsers.fulfilled, (state, action) => {
+    //   return action.payload;
+    //   /* with returning new result Immer will replace existing state with whatever we return */
+    // })
+    .addCase(addUser.fulfilled , userAdapter.addOne)
+    .addCase(removeUser.fulfilled , userAdapter.removeOne)
     ;
   },
 });
 
-export const selectAllUsers = (state) => state.users;
-export const selectUserById = (state, userId) =>
-  state.users.find((user) => user.id === userId);
+export const {
+  selectAll : selectAllUsers,
+  selectById : selectUserById
+} = userAdapter.getSelectors(state => state.users);
+
+// export const selectAllUsers = (state) => state.users;
+// export const selectUserById = (state, userId) =>
+//   state.users.find((user) => user.id === userId);
 
 export default usersSlice.reducer;
