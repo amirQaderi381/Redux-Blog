@@ -7,10 +7,13 @@ export const apiSlice = createApi({
   endpoints : builder => ({
     getBlogs: builder.query({
         query: () => "/blogs"
+    }),
+    getBlog : builder.query({
+        query : (initialBlogId) => `/blogs/${initialBlogId}`
     })
   })
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetBlogsQuery} = apiSlice;
+export const {useGetBlogsQuery , useGetBlogQuery} = apiSlice;

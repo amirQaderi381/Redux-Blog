@@ -27,7 +27,7 @@ const BlogsList = () => {
   const navigate = useNavigate();
 
   const {
-    data: blogs,
+    data: blogs = [],
     isLoading,
     isFetching,
     isSuccess,

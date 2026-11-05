@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { deletedBlog, destroyBlog, selectBlogById } from "../reducers/BlogSlice";
+import { destroyBlog, selectBlogById } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
 import ReactionButtons from "./ReactionButtons";
+import { useGetBlogQuery } from "../api/apiSlice";
+import Spinner from "./Spinner";
 
 const SingleBlogPage = () => {
-  const { blogId } = useParams();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const blog = useSelector((state) => selectBlogById(state, blogId));
+  const { blogId } = useParams();
+  const { data: blog, isFetching, isSuccess } = useGetBlogQuery(blogId);
+  const navigate = useNavigate();
 
   if (!blog) {
     return (
@@ -22,36 +23,40 @@ const SingleBlogPage = () => {
 
   const handleDelete = () => {
     if (blog) {
-      dispatch(destroyBlog(blog.id))
-      //dispatch(deletedBlog({ id: blog.id }));
+      //dispatch(destroyBlog(blog.id))
       navigate("/");
     }
   };
-  return (
-    <section>
+
+  let content;
+  if (isFetching) {
+    content = <Spinner text="در حال بارگذاری..." />;
+  } else if (isSuccess) {
+    content = (
       <article className="blog">
         <h2>{blog.title}</h2>
-        <div style={{marginTop : "10px" , marginRight : "20px"}}>
-          <ShowTime timestamp={blog.date}/>
-          <ShowAuthor userId={blog.user}/>
+        <div style={{ marginTop: "10px", marginRight: "20px" }}>
+          <ShowTime timestamp={blog.date} />
+          <ShowAuthor userId={blog.user} />
         </div>
         <p className="blog-content">{blog.content}</p>
-         <ReactionButtons blog={blog}/>
-        <div style={{marginTop: "10px"}}>
+        <ReactionButtons blog={blog} />
+        <div style={{ marginTop: "10px" }}>
           <Link className="button" to={`/blogs/edit-blog/${blog.id}`}>
             ویرایش پست
           </Link>
           <button
-            onClick={handleDelete}
+            //onClick={handleDelete}
             className="muted-button"
             style={{ marginRight: "1em" }}
           >
-             حذف پست
+            حذف پست
           </button>
         </div>
       </article>
-    </section>
-  );
+    );
+  }
+  return <section>{content}</section>;
 };
 
 export default SingleBlogPage;
