@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addedBlog, addNewBlog } from "../reducers/BlogSlice";
 import { useNavigate } from "react-router-dom";
 import { selectAllUsers } from "../reducers/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
+import { useAddNewBlogMutation } from "../api/apiSlice";
+import { useSelector } from "react-redux";
 
 const CreateBlogForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [requestStatus, setRequestStatus] = useState("idle");
 
-  const dispatch = useDispatch();
+  const [addNewBlog , {isLoading}] = useAddNewBlogMutation();
+
   const navigate = useNavigate();
 
   const authors = useSelector((state) => selectAllUsers(state));
@@ -20,17 +20,12 @@ const CreateBlogForm = () => {
   const handleContentChange = (e) => setContent(e.target.value);
   const handleAuthorChange = (e) => setUserId(e.target.value);
 
-  //متد  بررسی می‌کند که آیا تمام عناصر آرایه شرط موردنظر را برقرار می‌کنند یا خیر.
-  //اگر همه عناصر شرط را داشته باشند، true برمی‌گرداند.
-  const canSave =
-    [title, content, userId].every(Boolean) && requestStatus === "idle";
+  const canSave = [title, content, userId].every(Boolean) && !isLoading;
 
   const handleSubmitForm = async () => {
     if (canSave) {
       try {
-        setRequestStatus("pending");
-        await dispatch(
-          addNewBlog({
+        await addNewBlog({
             id: nanoid(),
             date: new Date().toISOString(),
             title,
@@ -43,23 +38,14 @@ const CreateBlogForm = () => {
               rocket: 0,
               eyes: 0,
             },
-          }),
-        );
+          }).unwrap();
         setTitle("");
         setContent("");
         setUserId("");
         navigate("/");
       } catch (error) {
         console.error("failed to save new blog");
-      } finally {
-        setRequestStatus("idle");
       }
-
-      // dispatch(addedBlog(title , content , userId));
-      // setTitle("");
-      // setContent("");
-      // setUserId("");
-      // navigate("/");
     }
   };
   return (
