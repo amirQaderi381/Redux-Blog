@@ -1,42 +1,42 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate, useParams } from "react-router-dom";
-import { editBlog, selectBlogById, updatedBlog } from "../reducers/BlogSlice";
+import { useGetBlogQuery, useUpdateBlogMutation } from "../api/apiSlice";
 
 const EditBlogForm = () => {
   const { blogId } = useParams();
-  const blog = useSelector((state) => selectBlogById(state, blogId));
+
+ // The blog is already fetched and cached by SingleBlogPage.
+ // RTK Query reuses the cached data instead of making another API request.
+ // Solve issue : Using Specific Tags
+  const { data: blog } = useGetBlogQuery(blogId);
+
+  const [editBlog, { isLoading }] = useUpdateBlogMutation();
 
   const [title, setTitle] = useState(blog.title);
   const [content, setContent] = useState(blog.content);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
+    const editedBlog = {
+      id: blogId,
+      date: blog.date,
+      title,
+      content,
+      user: blog.user,
+      reactions: {
+        thumpup: 0,
+        hooray: 0,
+        heart: 0,
+        rocket: 0,
+        eyes: 0,
+      },
+    };
     if ((title, content)) {
-      dispatch(
-        editBlog({
-          id: blogId,
-          date: blog.date,
-          title,
-          content,
-          user: blog.user,
-          reactions: {
-            thumpup: 0,
-            hooray: 0,
-            heart: 0,
-            rocket: 0,
-            eyes: 0,
-          },
-        }),
-      );
-      //dispatch(updatedBlog({id : blog.id , title , content}))
-      setTitle("");
+      (await editBlog({...editedBlog}).unwrap(), setTitle(""));
       setContent("");
       navigate(`/blogs/${blog.id}`);
     }
