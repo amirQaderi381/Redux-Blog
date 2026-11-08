@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, removeUser, selectAllUsers } from "../reducers/userSlice";
+import { addUser, removeUser, selectAllUsers } from "../reducers/UserSlice";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "@reduxjs/toolkit";

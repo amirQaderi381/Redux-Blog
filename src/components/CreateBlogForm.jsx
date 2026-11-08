@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { selectAllUsers } from "../reducers/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { useAddNewBlogMutation } from "../api/apiSlice";
 import { useSelector } from "react-redux";
+import { selectAllUsers } from "../reducers/UserSlice";
 
 const CreateBlogForm = () => {
   const [title, setTitle] = useState("");

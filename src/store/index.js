@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import blogsReducer from "../reducers/BlogSlice";
-import usersReducer from "../reducers/userSlice";
+import usersReducer, { extendedApiSlice } from "../reducers/UserSlice";
 import { apiSlice } from "../api/apiSlice";
 
 export const store = configureStore(({
@@ -18,5 +18,5 @@ export const store = configureStore(({
 // store.dispatch(fetchUsers());
 
 //we are using RTK Query : core (not hooks : second way)
-console.log(apiSlice.endpoints.getUsers)
-store.dispatch(apiSlice.endpoints.getUsers.initiate());
+console.log(extendedApiSlice.endpoints.getUsers)
+store.dispatch(extendedApiSlice.endpoints.getUsers.initiate());

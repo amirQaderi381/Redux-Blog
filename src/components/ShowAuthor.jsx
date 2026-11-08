@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectUserById } from "../reducers/userSlice";
+import { selectUserById } from "../reducers/UserSlice";
 
 const ShowAuthor = ({ userId }) => {
   const author = useSelector((state) => selectUserById(state , userId));

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectAllBlogs, selectUserBlogs } from "../reducers/BlogSlice";
-import { selectUserById } from "../reducers/userSlice";
+import { selectUserById } from "../reducers/UserSlice";
 
 const UserPage = () => {
 
