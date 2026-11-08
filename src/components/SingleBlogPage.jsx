@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { destroyBlog, selectBlogById } from "../reducers/BlogSlice";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
 import ReactionButtons from "./ReactionButtons";

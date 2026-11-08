@@ -33,7 +33,7 @@ export const apiSlice = createApi({
         body: blog,
       }),
       invalidatesTags: (result, error, arg) => [{ type: "BLOG", id: arg.id }],
-    }),
+    })
   }),
 });
 

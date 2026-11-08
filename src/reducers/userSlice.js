@@ -1,63 +1,35 @@
-import { createAsyncThunk, createEntityAdapter, createSlice, nanoid } from "@reduxjs/toolkit";
-import { createUser, deleteUser, getAllUsers } from "../services";
+import {  createSelector, createSlice } from "@reduxjs/toolkit";
+import { apiSlice } from "../api/apiSlice";
 
-/*
-createAsyncThunk برای مدیریت عملیات غیرهم‌زمان استفاده می‌شه.
-آرگومان اول اون، نام پایه اکشن‌هاست.
-آرگومان دوم، تابع payload creator است که منطق عملیات رو اجرا می‌کنه.
-این تابع با توجه به نتیجه عملیات، باعث تولید اکشن pending، fulfilled یا rejected می‌شه.
-با extraReducers مشخص می‌کنی که state چطور به این اکشن‌ها واکنش نشون بده.
-با return نتیجه موفق رو به action.payload می‌فرستی و با rejectWithValue می‌تونی مقدار مشخصی برای خطا برگردونی.
-اگر در کامپوننت به رفتار معمول Promise و انتقال خطا به catch نیاز داری، از .unwrap() استفاده کن
-*/
+export const extendedApiSlice = apiSlice.injectEndpoints({
+  endpoints : builder => ({
+    getUsers : builder.query({
+      query : () => "/users"
+    })
+  })
+})
 
-//createAsyncThunk عملیات غیرهم‌زمان رو مدیریت می‌کنه؛ extraReducers در createSlice مشخص می‌کنه که state چطور به اکشن‌های حاصل از اون عملیات واکنش نشون بده.
+// یک selector memorized شده هس که از cache داده ها رو نمایش میده
+export const selectAllUsersResult = extendedApiSlice.endpoints.getUsers.select();
 
-export const fetchUsers = createAsyncThunk("/users/fetchUsers", async () => {
-  const response = await getAllUsers();
-  return response.data;
-});
+const emptyUsers = [];
 
-export const addUser = createAsyncThunk(
-  "/users/createUser",
-  async (initialUser) => {
-    const response = await createUser(initialUser);
-    return response.data;
-  },
+// a ?? b => if a is true return a else b
+export const selectAllUsers = createSelector(
+  [selectAllUsersResult],
+  (result) => result?.data ?? emptyUsers
 );
 
-export const removeUser = createAsyncThunk("/users/deleteUser" , async (userId) => {
-  await deleteUser(userId);
-  return userId;
-});
-
-const userAdapter = createEntityAdapter();
-const initialState = userAdapter.getInitialState();
+export const selectUserById = createSelector(
+  [selectAllUsers , (state , userId) => userId],
+  (users , userId) => users.find(user => user.id === userId)
+);
 
 const usersSlice = createSlice({
   name: "users",
-  initialState,
+  initialState : emptyUsers,
   reducers: {},
-  extraReducers: (builder) => {
-    builder.
-     addCase(fetchUsers.fulfilled, userAdapter.setAll)
-    // addCase(fetchUsers.fulfilled, (state, action) => {
-    //   return action.payload;
-    //   /* with returning new result Immer will replace existing state with whatever we return */
-    // })
-    .addCase(addUser.fulfilled , userAdapter.addOne)
-    .addCase(removeUser.fulfilled , userAdapter.removeOne)
-    ;
-  },
 });
 
-export const {
-  selectAll : selectAllUsers,
-  selectById : selectUserById
-} = userAdapter.getSelectors(state => state.users);
-
-// export const selectAllUsers = (state) => state.users;
-// export const selectUserById = (state, userId) =>
-//   state.users.find((user) => user.id === userId);
-
+export const {useGetUsersQuery} = extendedApiSlice;
 export default usersSlice.reducer;
