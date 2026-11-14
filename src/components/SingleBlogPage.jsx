@@ -3,13 +3,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import ShowTime from "./ShowTime";
 import ShowAuthor from "./ShowAuthor";
 import ReactionButtons from "./ReactionButtons";
-import { useGetBlogQuery } from "../api/apiSlice";
+import { useDeleteBlogMutation, useGetBlogQuery } from "../api/apiSlice";
 import Spinner from "./Spinner";
 
 const SingleBlogPage = () => {
 
   const { blogId } = useParams();
+
   const { data: blog, isFetching, isSuccess } = useGetBlogQuery(blogId);
+  const [deleteBlog , {isLoading}] = useDeleteBlogMutation(blogId);
+
   const navigate = useNavigate();
 
   if (!blog) {
@@ -20,8 +23,9 @@ const SingleBlogPage = () => {
     );
   }
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     if (blog) {
+      await deleteBlog(blog.id)
       //dispatch(destroyBlog(blog.id))
       navigate("/");
     }
@@ -45,7 +49,7 @@ const SingleBlogPage = () => {
             ویرایش پست
           </Link>
           <button
-            //onClick={handleDelete}
+            onClick={handleDelete}
             className="muted-button"
             style={{ marginRight: "1em" }}
           >

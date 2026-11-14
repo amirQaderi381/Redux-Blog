@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {  selectAllUsers } from "../reducers/UserSlice";
+import {  selectAllUsers, useAddNewUserMutation, useDeleteUserMutation } from "../reducers/UserSlice";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "@reduxjs/toolkit";
@@ -9,18 +9,23 @@ const UsersList = () => {
 
   const handleChangeUser = (e) => setUser(e.target.value);
 
-  // const handleDelete = (userId) => {
-  //   dispatch(removeUser(userId));
-  // };
+  const [addNewUser , {isLoading}] = useAddNewUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDelete = async(userId) => {
+    ///dispatch(removeUser(userId));
+    await deleteUser(userId);
+  };
 
   const canSave = Boolean(user);
 
-  // const handleSubmitForm = () => {
-  //   if (canSave) {
-  //     dispatch(addUser({ id: nanoid(), fullname: user }));
-  //     setUser("");
-  //   }
-  // };
+  const handleSubmitForm = async() => {
+    if (canSave) {
+      //dispatch(addUser({ id: nanoid(), fullname: user }));
+      await addNewUser({ id: nanoid(), fullname: user });
+      setUser("");
+    }
+  };
 
   const users = useSelector((state) => selectAllUsers(state));
 
@@ -29,7 +34,7 @@ const UsersList = () => {
       <Link to={`/users/${user.id}`}>{user.fullname}</Link>
       <Link
         style={{ marginRight: "10px", color: "tomato" }}
-        // onClick={() => handleDelete(user.id)}
+         onClick={() => handleDelete(user.id)}
       >
         &otimes;
       </Link>
@@ -44,10 +49,10 @@ const UsersList = () => {
           type="text"
           name="fullname"
           value={user}
-         // onChange={handleChangeUser}
+          onChange={handleChangeUser}
         />
         <button type="button"
-        //OnClick={handleSubmitForm}
+         onClick={handleSubmitForm}
          disabled={!canSave}>
           ساخت نویسنده
         </button>

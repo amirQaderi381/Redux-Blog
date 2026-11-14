@@ -4,7 +4,7 @@ export const apiSlice = createApi({
   // مسیر قرار گیری کش های ما هس :‌state.api
   reducerPath: "api", //اگه مقدار ندیم خودش این مقدار بصورت پیش فرض میذاره
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:9000" }),
-  tagTypes: ["BLOG"],
+  tagTypes: ["BLOG" , "USER"],
   endpoints: (builder) => ({
     getBlogs: builder.query({
       query: () => "/blogs",
@@ -33,6 +33,13 @@ export const apiSlice = createApi({
         body: blog,
       }),
       invalidatesTags: (result, error, arg) => [{ type: "BLOG", id: arg.id }],
+    }),
+    deleteBlog : builder.mutation({
+      query : blogId => ({
+        url : `/blogs/${blogId}`,
+        method : "DELETE"
+      }),
+      invalidatesTags : ["BLOG"]
     })
   }),
 });
@@ -44,6 +51,7 @@ export const {
   useGetBlogQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
+  useDeleteBlogMutation
 } = apiSlice;
 
 

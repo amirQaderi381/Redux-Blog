@@ -55,34 +55,6 @@
         "rocket": 0,
         "eyes": 0
       }
-    },
-    {
-      "id": "R56B-P6wbhg",
-      "date": "2026-11-06T07:46:40.072Z",
-      "title": "weblog ",
-      "content": "new ",
-      "user": "PIgQ-Wg4t_giV6xsuoNdK",
-      "reactions": {
-        "thumpup": 0,
-        "hooray": 0,
-        "heart": 0,
-        "rocket": 0,
-        "eyes": 0
-      }
-    },
-    {
-      "id": "v2ZBPFfbd0k",
-      "date": "2026-11-06T09:18:53.094Z",
-      "title": "this is new blog title",
-      "content": "blog description",
-      "user": "oFXDkjC757fc8xT6TN0_O",
-      "reactions": {
-        "thumpup": 0,
-        "hooray": 0,
-        "heart": 0,
-        "rocket": 0,
-        "eyes": 0
-      }
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
